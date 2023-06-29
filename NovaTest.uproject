@@ -1,6 +1,17 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{0B6DB322-4E7A-1F9A-C687-72832FA29AA0}",
+	"EngineAssociation": "{42BE044B-4531-C5DA-CECA-BE8D2E2BB34A}",
 	"Category": "",
-	"Description": ""
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "NovaTest",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine",
+				"UMG"
+			]
+		}
+	]
 }
