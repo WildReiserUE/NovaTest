@@ -5,6 +5,7 @@
 
 #include "NT_Instance.h"
 #include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "NovaTest/UI/NT_MenuWidget.h"
@@ -17,43 +18,28 @@ ANT_MenuController::ANT_MenuController()
 void ANT_MenuController::BeginPlay()
 {
 	Super::BeginPlay();
-	DisableInput(this);
-	if(MenuWidget)
+	if(!MenuWidget)
+		MenuWidget = CreateWidget<UNT_MenuWidget>(this, UNT_MenuWidget::StaticClass());
+	if(!MenuWidget->IsInViewport())
 	{
-		if(IsValid(MenuWidget))
-		{
-			const auto CreatedWidget = CreateWidget(this,MenuWidget);
-			if(!CreatedWidget->IsInViewport())
-			{
-				CreatedWidget->AddToViewport(0);
-				if(UNT_MenuWidget* AssignedWidget = Cast<UNT_MenuWidget>(CreatedWidget))
-				{
-					AssignedWidget->ButtonExit->OnClicked.AddDynamic(this,&ANT_MenuController::QuitProgramm);
-					AssignedWidget->ButtonStart->OnClicked.AddDynamic(this,&ANT_MenuController::OpenPreview);
-				}
-			}
-		}
-		
+		MenuWidget->AddToViewport(0);
+		UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(this, MenuWidget);
+		if(!MenuWidget->ButtonExit->OnClicked.IsBound())
+			MenuWidget->ButtonExit->OnClicked.AddDynamic(this,&ANT_MenuController::QuitProgram);
+		if(!MenuWidget->ButtonStart->OnClicked.IsBound())
+			MenuWidget->ButtonStart->OnClicked.AddDynamic(this,&ANT_MenuController::OpenPreview);
 	}
 }
 
-UNT_Instance* ANT_MenuController::GetCurrentGameInstance()
+void ANT_MenuController::QuitProgram()
 {
-	CurrentInstance = GetGameInstance<UNT_Instance>();
-	return CurrentInstance ? CurrentInstance : nullptr;
-}
-
-void ANT_MenuController::QuitProgramm()
-{
-	UKismetSystemLibrary::QuitGame(GetWorld(),this,EQuitPreference::Quit,true);
+	UKismetSystemLibrary::QuitGame(this,this,EQuitPreference::Quit,false);
 }
 
 void ANT_MenuController::OpenPreview()
 {
 	if(GetCurrentGameInstance())
 	{
-		UnPossess();
-		UGameplayStatics::OpenLevelBySoftObjectPtr(this,CurrentInstance->OverviewLevel,true);
+		UGameplayStatics::OpenLevelBySoftObjectPtr(this,GetCurrentGameInstance()->OverviewLevel,true);
 	}
 }
-//UE_LOG(LogTemp,Log,TEXT("CREATE WIDGET"))

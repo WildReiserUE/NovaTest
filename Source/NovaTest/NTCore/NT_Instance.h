@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "Engine/GameInstance.h"
-#include "NT_Object_Struct.h"
 #include "NT_Instance.generated.h"
 
 
@@ -17,22 +16,19 @@ class NOVATEST_API UNT_Instance : public UGameInstance
 public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Settings")
 	UDataTable* CollectionTable = nullptr;
-
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Settings")
 	TAssetPtr<UWorld> ZeroLevel = nullptr;
-
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Settings")
 	TAssetPtr<UWorld> OverviewLevel = nullptr;
-
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Usables")
+	UPROPERTY()
 	TArray<FName> PlanetarParts;
 
 	UFUNCTION(BlueprintCallable)
 	TArray<FName> CollectAllParts();
-
-	UFUNCTION()
-	virtual void Init() override;
-
 	UFUNCTION()
 	UStaticMesh* GetMeshFromTable(FName PartNames);
+
+protected:
+	UFUNCTION()
+	virtual void Init() override;
 };

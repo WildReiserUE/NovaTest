@@ -3,6 +3,8 @@
 
 #include "NT_CompletePart.h"
 
+#include "Engine/StaticMeshActor.h"
+
 ANT_CompletePart::ANT_CompletePart()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -10,6 +12,8 @@ ANT_CompletePart::ANT_CompletePart()
 	SetRootComponent(Sphere);
 	RotationSphere=CreateDefaultSubobject<USphereComponent>(TEXT("SphereRotation"));
 	RotationSphere->SetupAttachment(RootComponent);
+	RotationSphere->SetMobility(EComponentMobility::Movable);
+	RotationSphere->SetAbsolute(false,true,false);
 
 	SpringArm=CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -27,27 +31,20 @@ void ANT_CompletePart::BeginPlay()
 	
 }
 
+void ANT_CompletePart::SetHighlightOn(UPrimitiveComponent* Component)
+{
+	if(!Component) return;
+	Component->SetRenderCustomDepth(true);
+}
+
+void ANT_CompletePart::SetHighlightOff(UPrimitiveComponent* Component)
+{
+	if(!Component) return;
+	Component->SetRenderCustomDepth(false);
+}
+
 void ANT_CompletePart::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
-
-bool ANT_CompletePart::AddNewMesh(UStaticMesh* Mesh)
-{
-	if(Mesh)
-	{
-		// UStaticMeshComponent* AddedMesh=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshPart")); TODO:SPAWN AND CONSTRUCT ACTOR
-		// AddedMesh->SetupAttachment(RootComponent);
-		// AddedMesh->SetRelativeRotation(GetActorRotation());
-		// AddedMesh->SetCastShadow(false);
-		// AddedMesh->SetStaticMesh(Mesh);
-		// FNT_Object_Data NewInfo;
-		// NewInfo.DetailMesh = AddedMesh;
-		// NewInfo.bIsActive = false;
-		// InfoArray.Add(NewInfo);
-		return true;
-	}
-	return false;
-}
-

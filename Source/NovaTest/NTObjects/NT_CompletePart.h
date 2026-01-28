@@ -34,11 +34,15 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	UFUNCTION()
+	void SetHighlightOn(UPrimitiveComponent* Component);
+	UFUNCTION()
+	void SetHighlightOff(UPrimitiveComponent* Component);
 
 public:
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable)
-	bool AddNewMesh(UStaticMesh* Mesh);
+	//UFUNCTION(BlueprintCallable)
+	//bool AddNewMesh(UStaticMesh* Mesh);
 
 };

@@ -7,6 +7,11 @@
 #include "NT_MenuController.h"
 #include "NT_OverviewController.generated.h"
 
+struct FInputActionValue;
+class UNT_OverviewWidget;
+class UInputMappingContext;
+class UInputAction;
+
 UCLASS()
 class NOVATEST_API ANT_OverviewController : public ANT_MenuController
 {
@@ -15,33 +20,45 @@ class NOVATEST_API ANT_OverviewController : public ANT_MenuController
 public:
 	ANT_OverviewController();
 
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Settings")
-	TSubclassOf<UUserWidget> OverviewWidget;
-
-	UUserWidget* OvervievRef = nullptr;
-
+	UPROPERTY()
+	UNT_OverviewWidget* OverviewWidget = nullptr;
 	UPROPERTY()
 	ANT_CompletePart* SpawnedActor = nullptr;
-
 	UPROPERTY()
 	FRotator SpawnedRotation = FRotator(0);
-
 	UPROPERTY()
 	float SpawnedArmLenght = 0.f;
 
-protected:
-	virtual void BeginPlay() override;
-
-public:
-	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION()
-	virtual void OnPossess(APawn* InPawn) override;
-
 	UFUNCTION()
 	void BackToStartMap();
-
 	UFUNCTION()
 	void CreatePreviewActor();
+
+protected:
+	UPROPERTY()
+	UPrimitiveComponent* TempComponent = nullptr;
+	UPROPERTY()
+	AActor* SingleActor = nullptr;
+	/** MappingContext */
+	UPROPERTY()
+	UInputMappingContext* MappingContext = nullptr;
+	UPROPERTY()
+	UInputAction* IA_LeftMB = nullptr;
+
+	virtual void BeginPlay() override;
+	UFUNCTION()
+	void GetInfo(UStaticMeshComponent* Value);
+	UFUNCTION()
+	void SingleInfo(UStaticMeshComponent* Value);
+	UFUNCTION()
+	void SetHighlight(UPrimitiveComponent* Component);
+
+	UFUNCTION()
+	virtual void SetupInputComponent() override;
+	virtual void Tick(float DeltaTime) override;
+
+	void ObjectRotationStart(const FInputActionValue& Value);
+	void ObjectRotation(const FInputActionValue& Value);
+	void ObjectRotationEnd(const FInputActionValue& Value);
 
 };

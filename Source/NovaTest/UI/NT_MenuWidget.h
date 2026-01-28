@@ -16,8 +16,11 @@ class NOVATEST_API UNT_MenuWidget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY()
 	UButton* ButtonStart;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY()
 	UButton* ButtonExit;
+
+protected:
+	virtual void NativeOnInitialized() override;
 };

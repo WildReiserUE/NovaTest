@@ -3,20 +3,19 @@
 
 #include "NT_MenuGameMode.h"
 
+#include "NT_MenuController.h"
+#include "NT_Pawn.h"
+
 
 ANT_MenuGameMode::ANT_MenuGameMode()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PlayerControllerClass = ANT_MenuController::StaticClass();
+	DefaultPawnClass = ANT_Pawn::StaticClass();
 }
 
 void ANT_MenuGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-}
-
-void ANT_MenuGameMode::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 

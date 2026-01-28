@@ -2,16 +2,20 @@
 
 
 #include "NT_Instance.h"
+
+#include "NT_Object_Struct.h"
 #include "Engine/DataTable.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 TArray<FName> UNT_Instance::CollectAllParts()
 {
 	if(CollectionTable)
 	{
+		UE_LOG(LogTemp,Warning,TEXT("Collect Parts"));
 		PlanetarParts = CollectionTable->GetRowNames();
-		return PlanetarParts;
 	}
+	UE_LOG(LogTemp,Warning,TEXT("Parts COUNT = %i"), PlanetarParts.Num());
 	return PlanetarParts;
 }
 
@@ -19,6 +23,7 @@ void UNT_Instance::Init()
 {
 	Super::Init();
 	CollectAllParts();
+	UKismetSystemLibrary::ExecuteConsoleCommand(this,"t.MaxFPS 60");
 }
 
 UStaticMesh* UNT_Instance::GetMeshFromTable(FName PartNames)

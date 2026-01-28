@@ -9,6 +9,9 @@
 #include "Components/ScrollBox.h"
 #include "NT_OverviewWidget.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSendInfo, UStaticMeshComponent*, Component);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSingleInfo, UStaticMeshComponent*, Component);
+
 UCLASS()
 class NOVATEST_API UNT_OverviewWidget : public UUserWidget
 {
@@ -17,11 +20,25 @@ class NOVATEST_API UNT_OverviewWidget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
-	UFUNCTION(BlueprintCallable)
-	void UpdateOverview(TArray<FName> Parts, ANT_CompletePart* Actor);
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY()
+	UButton* ButtonComplect = nullptr; 
+	UPROPERTY()
 	UButton* ButtonBack;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY()
 	UScrollBox* PartsList;
+	UPROPERTY()
+	FOnSendInfo OnSendInfo;
+	UPROPERTY()
+	FOnSingleInfo OnSingleInfo;
+	UFUNCTION()
+	void AddToList(int Index, FString Name,UStaticMeshComponent* Component);
+	UFUNCTION()
+	void Hovered(UStaticMeshComponent* Component);
+	UFUNCTION()
+	void Single(UStaticMeshComponent* Component);
+	UFUNCTION()
+	void ClearList();
+
+protected:
+	virtual void NativeOnInitialized() override;
 };

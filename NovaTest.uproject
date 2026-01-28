@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{42BE044B-4531-C5DA-CECA-BE8D2E2BB34A}",
+	"EngineAssociation": "{9C2C81B8-4DF3-AB57-1AF1-BC89EBAFD214}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -11,6 +11,28 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"UMG"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "EnhancedInput",
+			"Enabled": true
+		},
+		{
+			"Name": "MagicLeapMedia",
+			"Enabled": false,
+			"SupportedTargetPlatforms": [
+				"Lumin"
+			]
+		},
+		{
+			"Name": "MagicLeap",
+			"Enabled": false,
+			"SupportedTargetPlatforms": [
+				"Lumin",
+				"Mac",
+				"Win64"
 			]
 		}
 	]
