@@ -6,6 +6,10 @@
 перемещение между уровнями
 работа с постпроцессингом
 Видео-превью
-https://rutube.ru/video/3962bfd907145aa8a5c2952b536ef9cc/?r=a/
+
+
+https://github.com/user-attachments/assets/e944e092-fb0e-4f3f-abcf-04ed54ace296
+
+
 никакой логики в BluePrints, только код.
 использование подхода KISS, принципов SOLID при разработке.
