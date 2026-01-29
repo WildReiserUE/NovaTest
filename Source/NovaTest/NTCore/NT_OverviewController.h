@@ -32,7 +32,7 @@ public:
 	UFUNCTION()
 	void BackToStartMap();
 	UFUNCTION()
-	void CreatePreviewActor();
+	void CreatePreviewActor(int Value);
 
 protected:
 	UPROPERTY()
@@ -52,7 +52,6 @@ protected:
 	void SingleInfo(UStaticMeshComponent* Value);
 	UFUNCTION()
 	void SetHighlight(UPrimitiveComponent* Component);
-
 	UFUNCTION()
 	virtual void SetupInputComponent() override;
 	virtual void Tick(float DeltaTime) override;

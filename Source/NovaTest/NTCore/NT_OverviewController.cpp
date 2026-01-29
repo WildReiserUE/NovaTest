@@ -10,13 +10,13 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "NT_Button.h"
+#include "NT_Object_Struct.h"
 
 
 ANT_OverviewController::ANT_OverviewController()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	//bEnableClickEvents = true;
-	//bEnableMouseOverEvents = true;
 	SetShowMouseCursor(true);
 
 	MappingContext = ConstructorHelpers::FObjectFinder<UInputMappingContext>
@@ -43,8 +43,12 @@ void ANT_OverviewController::BeginPlay()
 			OverviewWidget->AddToViewport(0);
 			if(!OverviewWidget->ButtonBack->OnClicked.IsBound())
 				OverviewWidget->ButtonBack->OnClicked.AddDynamic(this,&ANT_OverviewController::BackToStartMap);
-			if(!OverviewWidget->ButtonComplect->OnClicked.IsBound())
-				OverviewWidget->ButtonComplect->OnClicked.AddDynamic(this,&ANT_OverviewController::CreatePreviewActor);
+			if(OverviewWidget->ArrButtons.Num() > 0)
+			for (auto Element : OverviewWidget->ArrButtons)
+			{
+				if(!Element->OnClickedDelegate.IsBound())
+					Element->OnClickedDelegate.AddDynamic(this,&ANT_OverviewController::CreatePreviewActor);
+			}
 			if(!OverviewWidget->OnSendInfo.IsBound())
 				OverviewWidget->OnSendInfo.AddDynamic(this,&ANT_OverviewController::GetInfo);
 			if(!OverviewWidget->OnSingleInfo.IsBound())
@@ -130,6 +134,7 @@ void ANT_OverviewController::SetupInputComponent()
 	}
 }
 
+
 void ANT_OverviewController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -171,13 +176,13 @@ void ANT_OverviewController::BackToStartMap()
 {
 	if(GetCurrentGameInstance())
 	{
-		UGameplayStatics::OpenLevelBySoftObjectPtr(this,GetCurrentGameInstance()->ZeroLevel,true);
+		UGameplayStatics::OpenLevel(this,"L_Start",true);
 	}
 }
 
-void ANT_OverviewController::CreatePreviewActor()
+void ANT_OverviewController::CreatePreviewActor(int Value)
 {
-	if(GetCurrentGameInstance()->PlanetarParts.Num() > 0 && !SpawnedActor)
+	if(GetCurrentGameInstance()->GetAllTables().IsValidIndex(Value) && !SpawnedActor)
 	{
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
@@ -191,12 +196,14 @@ void ANT_OverviewController::CreatePreviewActor()
 		if(SpawnedActor)
 		{
 			SpawnedRotation = SpawnedActor->GetActorRotation();
-			SpawnedArmLenght = SpawnedActor->SpringArm->TargetArmLength;
 			UGameplayStatics::FinishSpawningActor(SpawnedActor,SpawnTransform);
-			for(int i=0; i<GetCurrentGameInstance()->PlanetarParts.Num(); i++)
+
+			TArray<FName> TempName = GetCurrentGameInstance()->GetAllTables()[Value]->GetRowNames();
+			for(auto Part : TempName)
 			{
 				FNT_Object_Struct res;
-				auto pp = GetCurrentGameInstance()->CollectionTable->FindRow<FNT_Object_Struct>(GetCurrentGameInstance()->PlanetarParts[i],"",true);
+				
+				auto pp = GetCurrentGameInstance()->GetAllTables()[Value]->FindRow<FNT_Object_Struct>(Part,"",true);
 				AStaticMeshActor* MyNewActor = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass());
 				MyNewActor->SetMobility(EComponentMobility::Stationary);
 				UStaticMeshComponent* MeshComponent = MyNewActor->GetStaticMeshComponent();
@@ -207,7 +214,7 @@ void ANT_OverviewController::CreatePreviewActor()
 				MyNewActor->AttachToActor(SpawnedActor,FAttachmentTransformRules::SnapToTargetIncludingScale);
 				if(OverviewWidget)
 				{
-					OverviewWidget->AddToList(i,pp->ItemNameUI,MeshComponent);
+					OverviewWidget->AddToList(TempName.Find(Part),pp->ItemNameUI,MeshComponent);
 				}
 			}
 		}

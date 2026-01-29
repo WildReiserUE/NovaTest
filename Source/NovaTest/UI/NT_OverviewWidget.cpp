@@ -4,6 +4,8 @@
 #include "NT_OverviewWidget.h"
 
 #include "NT_PartSlot.h"
+#include "NT_Instance.h"
+#include "NT_Button.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/Border.h"
 #include "Components/CanvasPanel.h"
@@ -79,17 +81,19 @@ void UNT_OverviewWidget::NativeOnInitialized()
 	Overlay->AddChildToOverlay(SizeBox);
 
 	UVerticalBox* VerticalBox1 = WidgetTree->ConstructWidget<UVerticalBox>();
-	ButtonComplect = WidgetTree->ConstructWidget<UButton>();
-	ButtonComplect->SetBackgroundColor(FLinearColor(1,0.5,0,1));
 
-	UTextBlock* ComplectText = WidgetTree->ConstructWidget<UTextBlock>();
-	ComplectText->SetText(FText::FromString("planetary reductor"));
-	ComplectText->SetJustification(ETextJustify::Center);
-	ButtonComplect->AddChild(ComplectText);
-	auto Bs = VerticalBox1->AddChildToVerticalBox(ButtonComplect);
-		Bs->SetHorizontalAlignment(HAlign_Center);
-		Bs->SetPadding(FMargin(0,0,0,50));
+	UNT_Instance* Instance = GetGameInstance<UNT_Instance>();
+	for (int i=0; i < Instance->GetAllTables().Num(); i++)
+	{
+		Button = WidgetTree->ConstructWidget<UNT_Button>();
+		ArrButtons.Add(Button);
+		Button->Index = i;
+		Button->UpdateName(FString("Constructor - ") + FString::FromInt(i+1));
 
+		auto Bs = VerticalBox1->AddChildToVerticalBox(Button);
+			Bs->SetHorizontalAlignment(HAlign_Center);
+		Bs->SetPadding(FMargin(0,0,0,10));
+	}
 	PartsList = WidgetTree->ConstructWidget<UScrollBox>();
 	PartsList->SetAllowOverscroll(true);
 		auto Vs = VerticalBox1->AddChildToVerticalBox(PartsList);

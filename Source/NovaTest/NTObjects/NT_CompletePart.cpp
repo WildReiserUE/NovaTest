@@ -3,26 +3,17 @@
 
 #include "NT_CompletePart.h"
 
-#include "Engine/StaticMeshActor.h"
+
 
 ANT_CompletePart::ANT_CompletePart()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	Sphere=CreateDefaultSubobject<USphereComponent>(TEXT("SphereRoot"));
+	USceneComponent* Sphere=CreateDefaultSubobject<USceneComponent>(TEXT("SphereRoot"));
 	SetRootComponent(Sphere);
 	RotationSphere=CreateDefaultSubobject<USphereComponent>(TEXT("SphereRotation"));
 	RotationSphere->SetupAttachment(RootComponent);
 	RotationSphere->SetMobility(EComponentMobility::Movable);
 	RotationSphere->SetAbsolute(false,true,false);
-
-	SpringArm=CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	SpringArm->SetupAttachment(RootComponent);
-	SpringArm->TargetArmLength = 75.f;
-	SpringArm->SetAbsolute(false,true,false);
-
-	CaptureCamera=CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("CaptureCamera"));
-	CaptureCamera->SetupAttachment(SpringArm);
-
 }
 
 void ANT_CompletePart::BeginPlay()

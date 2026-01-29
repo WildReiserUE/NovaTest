@@ -40,6 +40,6 @@ void ANT_MenuController::OpenPreview()
 {
 	if(GetCurrentGameInstance())
 	{
-		UGameplayStatics::OpenLevelBySoftObjectPtr(this,GetCurrentGameInstance()->OverviewLevel,true);
+		UGameplayStatics::OpenLevel(this,"L_Overview",true);
 	}
 }

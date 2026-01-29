@@ -3,35 +3,53 @@
 
 #include "NT_Instance.h"
 
-#include "NT_Object_Struct.h"
 #include "Engine/DataTable.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
-TArray<FName> UNT_Instance::CollectAllParts()
+UNT_Instance::UNT_Instance()
 {
-	if(CollectionTable)
+	Table1 = ConstructorHelpers::FObjectFinder<UDataTable>
+		(TEXT("Datatable'/Game/NovaTest/Data/Table1.Table1'")).Object;
+	Table2 = ConstructorHelpers::FObjectFinder<UDataTable>
+		(TEXT("Datatable'/Game/NovaTest/Data/Table2.Table2'")).Object;
+	Table3 = ConstructorHelpers::FObjectFinder<UDataTable>
+		(TEXT("Datatable'/Game/NovaTest/Data/Table3.Table3'")).Object;
+	Table4 = ConstructorHelpers::FObjectFinder<UDataTable>
+		(TEXT("Datatable'/Game/NovaTest/Data/Table4.Table4'")).Object;
+}
+
+TArray<FName> UNT_Instance::CollectAllParts(UDataTable* Table)
+{
+	ArrParts = Table->GetRowNames();
+	UE_LOG(LogTemp,Warning,TEXT("Parts COUNT = %i"), ArrParts.Num());
+	return ArrParts;
+}
+
+TArray<UDataTable*> UNT_Instance::CollectTables()
+{
+	if(Table1)
 	{
-		UE_LOG(LogTemp,Warning,TEXT("Collect Parts"));
-		PlanetarParts = CollectionTable->GetRowNames();
+		ArrTables.Add(Table1);
 	}
-	UE_LOG(LogTemp,Warning,TEXT("Parts COUNT = %i"), PlanetarParts.Num());
-	return PlanetarParts;
+	if(Table2)
+	{
+		ArrTables.Add(Table2);
+	}
+	if(Table3)
+	{
+		ArrTables.Add(Table3);
+	}
+	if(Table4)
+	{
+		ArrTables.Add(Table4);
+	}
+	return ArrTables;
 }
 
 void UNT_Instance::Init()
 {
 	Super::Init();
-	CollectAllParts();
+	CollectTables();
 	UKismetSystemLibrary::ExecuteConsoleCommand(this,"t.MaxFPS 60");
-}
-
-UStaticMesh* UNT_Instance::GetMeshFromTable(FName PartNames)
-{
-	if(PartNames != FName("None"))
-	{
-		FNT_Object_Struct* MeshPreset = CollectionTable->FindRow<FNT_Object_Struct>(PartNames, "",true);
-		return MeshPreset->ItemPreviewMesh;
-	}
-	return nullptr;
 }

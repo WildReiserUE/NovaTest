@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "NT_CompletePart.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/ScrollBox.h"
 #include "NT_OverviewWidget.generated.h"
 
+class UNT_Button;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSendInfo, UStaticMeshComponent*, Component);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSingleInfo, UStaticMeshComponent*, Component);
 
@@ -17,18 +17,12 @@ class NOVATEST_API UNT_OverviewWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
-	virtual void NativeConstruct() override;
-
-	UPROPERTY()
-	UButton* ButtonComplect = nullptr; 
+public: 
 	UPROPERTY()
 	UButton* ButtonBack;
 	UPROPERTY()
-	UScrollBox* PartsList;
-	UPROPERTY()
+	TArray<UNT_Button*> ArrButtons = {};
 	FOnSendInfo OnSendInfo;
-	UPROPERTY()
 	FOnSingleInfo OnSingleInfo;
 	UFUNCTION()
 	void AddToList(int Index, FString Name,UStaticMeshComponent* Component);
@@ -40,5 +34,10 @@ public:
 	void ClearList();
 
 protected:
+	UPROPERTY()
+	UNT_Button* Button = nullptr;
+	UPROPERTY()
+	UScrollBox* PartsList;
+	virtual void NativeConstruct() override;
 	virtual void NativeOnInitialized() override;
 };

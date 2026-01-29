@@ -13,22 +13,28 @@ class NOVATEST_API UNT_Instance : public UGameInstance
 {
 	GENERATED_BODY()
 
-public:
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Settings")
-	UDataTable* CollectionTable = nullptr;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Settings")
-	TAssetPtr<UWorld> ZeroLevel = nullptr;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Settings")
-	TAssetPtr<UWorld> OverviewLevel = nullptr;
-	UPROPERTY()
-	TArray<FName> PlanetarParts;
+	UNT_Instance();
 
-	UFUNCTION(BlueprintCallable)
-	TArray<FName> CollectAllParts();
+public:
+	UPROPERTY()
+	UDataTable* Table1 = nullptr;
+	UPROPERTY()
+	UDataTable* Table2 = nullptr;
+	UPROPERTY()
+	UDataTable* Table3 = nullptr;
+	UPROPERTY()
+	UDataTable* Table4 = nullptr;
+	TArray<FName> CollectAllParts(UDataTable* Table);
 	UFUNCTION()
-	UStaticMesh* GetMeshFromTable(FName PartNames);
+	TArray<UDataTable*> CollectTables();
+	UFUNCTION()
+	TArray<UDataTable*> GetAllTables() {return ArrTables;}
 
 protected:
+	UPROPERTY()
+	TArray<UDataTable*> ArrTables = {};
+	UPROPERTY()
+	TArray<FName> ArrParts = {};
 	UFUNCTION()
 	virtual void Init() override;
 };
